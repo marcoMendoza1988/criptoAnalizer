@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, Dimensions } from 'react-native';
+import { View, Text, FlatList, Dimensions, ScrollView } from 'react-native';
 
 const { width } = Dimensions.get('screen')
-const _width = Number(width / 3) - 5;
+const _width = Number(width / 3);
 
-function TableHeader({dataHeader}){
+function TableHeader({ dataHeader }){
     //console.log(dataHeader)
     return(
-        <View style={{ flex: 1, flexDirection: 'row', width: '100%' }}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
             {dataHeader.map((res, key) => 
-                <Text key={res.name} style={[res.styleContent]}>{res.name}</Text>
+                <Text key={res.name} style={[ res.styleContent, { height: 35 } ]}>{res.name}</Text>
             )}
         </View>
     )
@@ -19,13 +19,28 @@ export default function Table(props){
     const { header, book, styleContentBody } = props;
 
     const renderItem = ( {item} ) => {
-        //console.log(styleContentBody)
+        let value = Object.keys(item).map((key) => [item[key]]);
+        console.log(value)
         return(
-            <View style={{ flex: 1, flexDirection: 'row', width: '100%' }}>
-                <Text style={ [{borderColor: '#CCC', borderWidth: 1, padding: 5, width: _width}, styleContentBody[0]]}>{item.book}</Text>
-                <Text style={[{borderColor: '#CCC', borderWidth: 1, padding: 5, width: _width}, styleContentBody[1]]}>{item.amount}</Text>
-                <Text style={[{borderColor: '#CCC', borderWidth: 1, padding: 5, width: _width}, styleContentBody[2]]}>{item.price}</Text>
-            </View>
+            <ScrollView>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                    {
+                        value.map((res, key) => 
+                            <Text 
+                                key={key} 
+                                style={ [
+                                    {borderColor: '#CCC', 
+                                    borderWidth: 1, 
+                                    padding: 5, 
+                                    width: _width}, 
+                                    styleContentBody[key
+                                ]] }>
+                                {res}
+                            </Text>
+                        )
+                    }
+                </View>
+            </ScrollView>
         )
     }
     //console.log(book)
@@ -33,6 +48,7 @@ export default function Table(props){
         <React.Fragment>
             <TableHeader dataHeader={header}/>
             <FlatList
+                style={{ marginTop: 35}}
                 data={book}
                 renderItem={renderItem}
                 numColumns={1}
